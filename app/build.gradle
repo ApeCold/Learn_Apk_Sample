@@ -1,0 +1,54 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "cn.bsd.learn.apk.sample"
+        minSdkVersion 19
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        //将svg图片生成为 指定纬度的png图片 5.0以下兼容适配
+//        vectorDrawables.generatedDensities("xhdpi","xxhdpi","xxxhdpi")
+        //使用support-v7兼容
+        vectorDrawables.useSupportLibrary = true
+        //只保留默认的资源和指定的资源
+        resConfigs("zh-rCN")
+
+        //配置so库cpu架构（x86 x86_64 mips mips64） 真机armeabi 模拟器x86
+        ndk{
+            abiFilters('armeabi')
+        }
+
+    }
+    buildTypes {
+        debug {
+            //开启源代码混淆
+            minifyEnabled true
+            //启用资源压缩
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    //将so库打包到apk呢
+    sourceSets{
+        main{
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
